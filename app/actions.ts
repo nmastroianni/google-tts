@@ -75,12 +75,23 @@ export async function generateSpeech(
     const sampleRate = sampleRateMatch
       ? parseInt(sampleRateMatch[1], 10)
       : 24000
+    // --- Create a safe timestamp ---
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = (now.getMonth() + 1).toString().padStart(2, '0') // JS months are 0-indexed
+    const day = now.getDate().toString().padStart(2, '0')
+    const hours = now.getHours().toString().padStart(2, '0')
+    const minutes = now.getMinutes().toString().padStart(2, '0')
+    const seconds = now.getSeconds().toString().padStart(2, '0')
 
+    // Format: YYYYMMDD_HHMMSS (e.g., 20251023_081530)
+    const timestamp = `${year}${month}${day}_${hours}${minutes}${seconds}`
+    // -------------------------------
     // Just return the raw data and sample rate
     return {
       pcmData: audioData,
       sampleRate: sampleRate,
-      fileName: `speech_${voice}_${accent}.mp3`, // Note the new .mp3 extension
+      fileName: `speech_${voice}_${accent}_${timestamp}.mp3`, // Note the new .mp3 extension
     }
   } catch (err) {
     console.error('Server Action Error:', err)
